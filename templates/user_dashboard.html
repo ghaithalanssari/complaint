@@ -1,0 +1,63 @@
+<!-- user_dashboard.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <h3>مرحبًا {{ user.username }}</h3>
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <h5>تقديم بلاغ جديد</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/submit_complaint">
+                        <div class="mb-3">
+                            <label class="form-label">نوع البلاغ</label>
+                            <select class="form-select" name="type" required>
+                                <option value="سرقة">سرقة</option>
+                                <option value="خطف">خطف</option>
+                                <option value="تهديد">تهديد</option>
+                                <option value="قتل">قتل</option>
+                                <option value="حالة أخرى">حالة أخرى</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">مكان الحادثة</label>
+                            <input type="text" class="form-control" name="location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">تفاصيل البلاغ</label>
+                            <textarea class="form-control" name="description" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">إرسال البلاغ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <h5>البلاغات السابقة</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.complaints %}
+                    <div class="list-group">
+                        {% for complaint in user.complaints %}
+                        <div class="list-group-item mb-2 bg-secondary">
+                            <h6>{{ complaint.type }}</h6>
+                            <small>المكان: {{ complaint.location }}</small><br>
+                            <small>الحالة: {{ complaint.status }}</small><br>
+                            <small class="text-muted">{{ complaint.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-center">لا توجد بلاغات سابقة</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

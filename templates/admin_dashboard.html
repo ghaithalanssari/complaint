@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" data-aos="fade-up">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0 text-neon">
+                        <i class="fas fa-tachometer-alt fa-beat"></i> لوحة التحكم الإدارية
+                    </h2>
+                    <form action="/admin/search" method="post" class="w-50">
+                        <div class="input-group search-bar">
+                            <input type="text" name="search_term" class="form-control glass-input" 
+                                   placeholder="ابحث بالوصف أو المكان...">
+                            <button class="btn btn-holographic" type="submit">
+                                <i class="fas fa-search fa-shake"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card-3d">
+                <div class="card-header holographic-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-circle fa-spin"></i> البلاغات المقدمة
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-holographic">
+                            <thead class="holographic-text">
+                                <tr>
+                                    <th>النوع</th>
+                                    <th>المكان</th>
+                                    <th>التاريخ</th>
+                                    <th>الحالة</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for complaint in complaints %}
+                                <tr class="hover-3d" data-aos="zoom-in">
+                                    <td>{{ complaint.type }}</td>
+                                    <td>{{ complaint.location }}</td>
+                                    <td>{{ complaint.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>
+                                        <span class="status-badge {{ 'resolved' if complaint.status == 'تم الحل' else 'pending' }}">
+                                            {{ complaint.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group-3d">
+                                            <a href="/admin/delete/{{ complaint.id }}" 
+                                               class="btn btn-danger btn-sm btn-float"
+                                               onclick="return confirm('هل أنت متأكد من الحذف؟')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                            <a href="/admin/print/{{ complaint.id }}" 
+                                               class="btn btn-success btn-sm btn-float">
+                                                <i class="fas fa-print"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card-3d">
+                <div class="card-header holographic-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-users fa-bounce"></i> المستخدمون المسجلون
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="user-list">
+                        {% for user in users %}
+                        <div class="user-card hover-3d" data-aos="flip-left">
+                            <div class="user-avatar">
+                                <i class="fas fa-user-astronaut"></i>
+                            </div>
+                            <div class="user-info">
+                                <h6>{{ user.username }}</h6>
+                                <small class="text-muted">{{ user.phone }}</small>
+                            </div>
+                            <span class="holographic-badge">
+                                {{ user.complaints|length }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+
+    .card-3d {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 25px;
+        transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+        box-shadow: 20px 20px 50px rgba(0,0,0,0.2);
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        overflow: hidden;
+    }
+
+    .card-3d:hover {
+        transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(-10px);
+    }
+
+    .holographic-header {
+        background: linear-gradient(135deg, #1a472a 0%, #2c553c 100%);
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .holographic-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+        animation: hologram 4s infinite linear;
+    }
+
+    @keyframes hologram {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .btn-holographic {
+        background: linear-gradient(45deg, #1a472a, #4CAF50);
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-holographic::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: rgba(255,255,255,0.1);
+        transform: rotate(45deg);
+    }
+
+    .hover-3d {
+        transition: all 0.3s;
+        transform: translateZ(0);
+    }
+
+    .hover-3d:hover {
+        transform: translateZ(10px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .status-badge {
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+    .status-badge.resolved {
+        background: #4CAF50;
+        color: white;
+    }
+
+    .status-badge.pending {
+        background: #FFC107;
+        color: black;
+    }
+
+    .user-card {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: rgba(255,255,255,0.9);
+        border-radius: 15px;
+        transition: all 0.3s;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        background: var(--main-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .card-3d {
+            transform: none;
+            margin: 15px;
+        }
+        
+        .glass-card {
+            padding: 15px;
+        }
+        
+        .input-group {
+            width: 100% !important;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #1a472a;
+            padding-bottom: 10px;
+        }
+        .details {
+            margin: 20px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: right;
+        }
+        th {
+            background-color: #1a472a;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="color: #1a472a;">تقرير بلاغ أمني</h1>
+        <p>نظام البلاغات الأمنية - الإدارة العامة للأمن</p>
+    </div>
+
+    <div class="details">
+        <h3>معلومات البلاغ:</h3>
+        <table>
+            <tr>
+                <th>رقم البلاغ</th>
+                <td>{{ complaint.id }}</td>
+            </tr>
+            <tr>
+                <th>نوع البلاغ</th>
+                <td>{{ complaint.type }}</td>
+            </tr>
+            <tr>
+                <th>مكان الحادثة</th>
+                <td>{{ complaint.location }}</td>
+            </tr>
+            <tr>
+                <th>التاريخ والوقت</th>
+                <td>{{ complaint.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            </tr>
+            <tr>
+                <th>الحالة</th>
+                <td>{{ complaint.status }}</td>
+            </tr>
+        </table>
+
+        <h3 style="margin-top: 30px;">معلومات المبلغ:</h3>
+        <table>
+            <tr>
+                <th>اسم المستخدم</th>
+                <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+                <th>رقم الهاتف</th>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <tr>
+                <th>الرقم الوطني</th>
+                <td>{{ user.national_id }}</td>
+            </tr>
+        </table>
+
+        <h3 style="margin-top: 30px;">تفاصيل البلاغ:</h3>
+        <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+            {{ complaint.description }}
+        </div>
+    </div>
+</body>
+</html>
